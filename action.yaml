@@ -16,13 +16,9 @@ inputs:
     required: false
     default: './'
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
-  args:
-    - ${{ inputs.app }}
-    - ${{ inputs.tgt }}
-#  steps:
-#    - shell: bash
-#      working-directory: ${{ inputs.dir }}
-#      run: |
-#        sed -i 's/${{ inputs.app }}-tag\s.*$/${{ inputs.app }}-tag ${{ inputs.app }}/g' values-${{ inputs.tgt }}.yaml
+  using: "composite"
+  steps:
+    - shell: bash
+      working-directory: ${{ inputs.dir }}
+      run: |
+        sed -i 's/${{ inputs.app }}-tag\s.*$/${{ inputs.app }}-tag ${{ inputs.app }}/g' values-${{ inputs.tgt }}.yaml
