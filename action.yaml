@@ -22,3 +22,4 @@ runs:
       working-directory: ${{ inputs.dir }}
       run: |
         sed -i 's/${{ inputs.app }}-tag\s.*$/${{ inputs.app }}-tag ${{ inputs.app }}/g' values-${{ inputs.tgt }}.yaml
+        cat values-${{ inputs.tgt }}.yaml
