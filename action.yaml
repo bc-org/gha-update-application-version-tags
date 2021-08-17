@@ -21,5 +21,12 @@ runs:
     - shell: bash
       working-directory: ${{ inputs.dir }}
       run: |
-        sed -i 's/${{ inputs.app }}-tag\s.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' values-${{ inputs.tgt }}.yaml
-        cat values-${{ inputs.tgt }}.yaml
+        if [[ "${{ inputs.tag }}" == "latest" ||  "${{ inputs.tag }}" == "dev" ||  "${{ inputs.tag }}" == "stage" || "${{ inputs.tag }}" == "prod" ]]; then
+          sed -i 's/${{ inputs.app }}-tag\s.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' values-dev.yaml
+        fi
+        if [[ "${{ inputs.tag }}" == "stage" || "${{ inputs.tag }}" == "prod" ]]; then
+          sed -i 's/${{ inputs.app }}-tag\s.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' values-stage.yaml
+        fi
+        if [[ "${{ inputs.tag }}" == "prod" ]]; then
+          sed -i 's/${{ inputs.app }}-tag\s.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' values-prod.yaml
+        fi
