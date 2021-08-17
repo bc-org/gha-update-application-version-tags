@@ -5,7 +5,7 @@ inputs:
     description: 'Application to change the tag'
     required: true
   tgt:
-    description: 'Target stage (dev/stage/prod)'
+    description: 'Target stage (dev/stage/prod/ignore)'
     required: true
     default: 'dev'
   tag:
@@ -21,7 +21,9 @@ runs:
     - shell: bash
       working-directory: ${{ inputs.dir }}
       run: |
-        sed -i 's/${{ inputs.app }}-tag\s.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' values-dev.yaml
+        if [[ "${{ inputs.tgt }}" == "dev" || "${{ inputs.tgt }}" == "stage" || "${{ inputs.tgt }}" == "prod" ]]; then
+          sed -i 's/${{ inputs.app }}-tag\s.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' values-dev.yaml
+        fi
         if [[ "${{ inputs.tgt }}" == "stage" || "${{ inputs.tgt }}" == "prod" ]]; then
           sed -i 's/${{ inputs.app }}-tag\s.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' values-stage.yaml
         fi
