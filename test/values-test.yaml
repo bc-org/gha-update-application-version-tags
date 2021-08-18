@@ -1,5 +1,5 @@
 default:
-  &my-app-tag v1.0.0
+  &my-app-tag v1.0.1
 
 app:
   image:

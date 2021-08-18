@@ -7,42 +7,57 @@ on:
       - published
 
 jobs:
-    test-dev:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - name: test-dev
-          uses: ./
-          with:
-            app: my-app
-            phase: dev
-            delimiter: ' '
-            tag: v1.0.1
-            working-directory: ./test
-        - name: check-output
+  test-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: test-dev
+        uses: ./
+        with:
+          app: my-app
+          phase: dev
+          delimiter: ' '
+          tag: v1.0.1
           working-directory: ./test
-          run: cat values-dev.yaml
-#    test-stage:
-#      runs-on: ubuntu-latest
-#      steps:
-#        - uses: actions/checkout@v2
-#        - name: test-stage
-#          uses: ./
-#          with:
-#            app: my-app
-#            deployment-phase: stage
-#            delimiter: ' '
-#            tag: v1.0.1
-#            working-directory: ./test
-#    test-prod:
-#      runs-on: ubuntu-latest
-#      steps:
-#        - uses: actions/checkout@v2
-#        - name: test-stage
-#          uses: ./
-#          with:
-#            app: my-app
-#            deployment-phase: prod
-#            delimiter: ' '
-#            tag: v1.0.1
-#            working-directory: ./test
+      - name: check-output
+        working-directory: ./test
+        run: |
+          echo "Checking result with expected using diff."
+          diff values-dev.yaml values-test.yaml
+  test-stage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: test-dev
+        uses: ./
+        with:
+          app: my-app
+          phase: stage
+          delimiter: ' '
+          tag: v1.0.1
+          working-directory: ./test
+      - name: check-output
+        working-directory: ./test
+        run: |
+          echo "Checking result with expected using diff."
+          diff values-dev.yaml values-test.yaml
+          diff values-stage.yaml values-test.yaml
+  test-prod:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: test-dev
+        uses: ./
+        with:
+          app: my-app
+          phase: prod
+          delimiter: ' '
+          tag: v1.0.1
+          working-directory: ./test
+      - name: check-output
+        working-directory: ./test
+        run: |
+          echo "Checking result with expected using diff."
+          diff values-dev.yaml values-test.yaml
+          diff values-stage.yaml values-test.yaml
+          diff values-prod.yaml values-test.yaml

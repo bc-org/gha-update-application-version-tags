@@ -34,11 +34,18 @@ runs:
     - shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
-        echo "Info: ${{ inputs.mode }}"
-        if [[ "${{ inputs.deployment-phase }}" == "ignore" ]]; then
+        echo "Mode: ${{ inputs.mode }}"
+        echo "Phase: ${{ inputs.phase }}"
+        echo "App: ${{ inputs.app }}"
+        echo "Delimiter: ${{ inputs.delimiter }}"
+        echo "Tag: ${{ inputs.tag }}"
+        echo "Prefix: ${{ inputs.prefix }}"
+
+        if [[ "${{ inputs.phase }}" == "ignore" ]]; then
           exit 0
         fi
         if [[ "${{ inputs.mode }}" == "cascade" ]]; then
+          echo "Cascading"
           if [[ "${{ inputs.phase }}" =~ ^(dev|stage|prod)$ ]]; then
             sed -i 's/${{ inputs.app }}-tag${{ inputs.delimiter }}.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' ${{ inputs.prefix }}dev.yaml
           fi

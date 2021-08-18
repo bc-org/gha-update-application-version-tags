@@ -1,2 +1,6 @@
 default:
-  &my-app v1.0.0
+  &my-app-tag v1.0.0
+
+app:
+  image:
+    tag: *my-app-tag
