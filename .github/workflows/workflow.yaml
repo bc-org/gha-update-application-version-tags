@@ -7,7 +7,7 @@ on:
       - published
 
 jobs:
-  test-dev:
+  test-dev-cascade:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,7 +24,9 @@ jobs:
         run: |
           echo "Checking result with expected using diff."
           diff values-dev.yaml values-test.yaml
-  test-stage:
+          diff values-stage.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Stage good!"
+          diff values-prod.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Prod good!"
+  test-stage-cascade:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -42,7 +44,8 @@ jobs:
           echo "Checking result with expected using diff."
           diff values-dev.yaml values-test.yaml
           diff values-stage.yaml values-test.yaml
-  test-prod:
+          diff values-prod.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Prod good!"
+  test-prod-cascade:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -61,3 +64,64 @@ jobs:
           diff values-dev.yaml values-test.yaml
           diff values-stage.yaml values-test.yaml
           diff values-prod.yaml values-test.yaml
+  test-dev-single:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: test-dev
+        uses: ./
+        with:
+          app: my-app
+          mode: single
+          phase: dev
+          delimiter: ' '
+          tag: v1.0.1
+          working-directory: ./test
+      - name: check-output
+        working-directory: ./test
+        run: |
+          echo "Checking result with expected using diff."
+          diff values-dev.yaml values-test.yaml
+          diff values-stage.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Stage good!"
+          diff values-prod.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Prod good!"
+  test-stage-single:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: test-dev
+        uses: ./
+        with:
+          app: my-app
+          mode: single
+          phase: stage
+          delimiter: ' '
+          tag: v1.0.1
+          working-directory: ./test
+      - name: check-output
+        working-directory: ./test
+        run: |
+          echo "Checking result with expected using diff."
+          diff values-stage.yaml values-test.yaml
+          diff values-dev.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Dev good!"
+          diff values-prod.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Prod good!"
+  test-prod-single:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: test-dev
+        uses: ./
+        with:
+          app: my-app
+          mode: single
+          phase: prod
+          delimiter: ' '
+          tag: v1.0.1
+          working-directory: ./test
+      - name: check-output
+        working-directory: ./test
+        run: |
+          echo "Checking result with expected using diff."
+          diff values-prod.yaml values-test.yaml
+          diff values-stage.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Stage good!"
+          diff values-dev.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Dev good!"
+
