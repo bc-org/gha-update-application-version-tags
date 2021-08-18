@@ -22,6 +22,7 @@ inputs:
   mode:
     # Currently, 'cascade' can only handle phases dev/stage/prod excplicitely. Whereas the user is free to use whatever suits as phase name in mode 'single'.
     description: 'Whether to cascade or not. When cascading, prod will be deployed to all three stages, stage to stage and dev, and dev to dev only.'
+    default: "cascade"
     required: true
   delimiter:
     description: 'Delimiter as regex between application and version tag. Default :\s (e.g. [app]: [tag]). If you use yaml defaults the delimiter will be \s only.'
