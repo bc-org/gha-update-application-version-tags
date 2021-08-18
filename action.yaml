@@ -26,7 +26,7 @@ inputs:
   delimiter:
     description: 'Delimiter as regex between application and version tag. Default :\s (e.g. [app]: [tag]). If you use yaml defaults the delimiter will be \s only.'
     required: false
-    default: ":\s"
+    default: ": "
 runs:
   using: "composite"
   steps:
