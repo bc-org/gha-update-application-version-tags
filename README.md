@@ -2,9 +2,9 @@
 
 ## Update Application Version Tags in Configuration Files
 
-Get your new versions of your application (docker images) deployed. The aim of this action is aiding automated deployment processes
-using tools like Helm and ArgoCD. It takes yaml configuration files and replaces all version tags with a new one using
-a standard format e.g.:
+Configure new versions of your application (docker images) for automated deployment. The aim of this action is aiding 
+automated deployment processes using tools like Helm and ArgoCD. It takes yaml configuration files and replaces all 
+version tags with a new one using a standard format e.g.:
 
 ```yaml
 my-app-tag: v0.0
