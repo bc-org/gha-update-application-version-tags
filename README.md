@@ -5,7 +5,7 @@ using tools like Helm and ArgoCD. It takes yaml configuration files and replaces
 a standard format e.g.:
 
 ```yaml
-my-app: v0.0
+my-app-tag: v0.0
 ```
 
 ### Single mode
