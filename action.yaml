@@ -1,32 +1,48 @@
 name: 'Set Helm Tags'
-description: 'Setting Helm Tags'
+description: 'Setting version tags in Helm configuration files cascadingly for deployment stages (dev/stage/prod).
 inputs:
   app:
     description: 'Application to change the tag'
     required: true
-  tgt:
-    description: 'Target stage (dev/stage/prod/ignore)'
+  deployment-phase:
+    description: 'Target stage (dev/stage/prod/ignore).'
     required: true
     default: 'dev'
+  prefix:
+    description: 'File prefix of configuration file (default: values-)'
+    required: false
+    default: 'values-'
   tag:
-    description: 'Tag to use'
+    description: 'Version tag to use'
     required: true
-  dir:
+  working-directory:
     description: 'working directory'
     required: false
     default: './'
+  mode:
+    description: 'Whether to cascade or not. When cascading, prod will be deployed to all three stages, stage to stage and dev, and dev to dev only.'
+    required: false
+    default: "cascade"
+  delimiter:
+    description: 'Delimiter as regex between application and version tag. Default :\s (e.g. [app]: [tag]). If you use yaml defaults the delimiter will be \s only.'
+    required: false
+    default: ":\s"
 runs:
   using: "composite"
   steps:
     - shell: bash
-      working-directory: ${{ inputs.dir }}
+      working-directory: ${{ inputs.working-directory }}
       run: |
-        if [[ "${{ inputs.tgt }}" == "dev" || "${{ inputs.tgt }}" == "stage" || "${{ inputs.tgt }}" == "prod" ]]; then
-          sed -i 's/${{ inputs.app }}-tag\s.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' values-dev.yaml
-        fi
-        if [[ "${{ inputs.tgt }}" == "stage" || "${{ inputs.tgt }}" == "prod" ]]; then
-          sed -i 's/${{ inputs.app }}-tag\s.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' values-stage.yaml
-        fi
-        if [[ "${{ inputs.tgt }}" == "prod" ]]; then
-          sed -i 's/${{ inputs.app }}-tag\s.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' values-prod.yaml
+        if [[ "${{ inputs.mode }}" == "cascade" ]]; then
+          if [[ "${{ inputs.deployment-phase }}" == "dev" || "${{ inputs.deployment-phase }}" == "stage" || "${{ inputs.deployment-phase }}" == "prod" ]]; then
+            sed -i 's/${{ inputs.app }}-tag${{ inputs.delimiter }}.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' ${{ inputs.prefix }}dev.yaml
+          fi
+          if [[ "${{ inputs.deployment-phase }}" == "stage" || "${{ inputs.deployment-phase }}" == "prod" ]]; then
+            sed -i 's/${{ inputs.app }}-tag${{ inputs.delimiter }}.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' ${{ inputs.prefix }}stage.yaml
+          fi
+          if [[ "${{ inputs.deployment-phase }}" == "prod" ]]; then
+            sed -i 's/${{ inputs.app }}-tag${{ inputs.delimiter }}.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' ${{ inputs.prefix }}prod.yaml
+          fi
+        else
+          sed -i 's/${{ inputs.app }}-tag${{ inputs.delimiter }}.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' ${{ inputs.prefix }}${{ inputs.deployment-phase }}.yaml
         fi
