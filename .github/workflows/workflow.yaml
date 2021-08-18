@@ -12,7 +12,7 @@ jobs:
       steps:
         - uses: actions/checkout@v2
         - name: test-dev
-          uses: dzelge/helm-update-version-tags@main
+          uses: ./
           with:
             app: my-app
             phase: dev
