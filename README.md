@@ -1,3 +1,5 @@
+[![test-action](https://github.com/dzelge/update-application-version-tags/actions/workflows/workflow.yaml/badge.svg)](https://github.com/dzelge/update-application-version-tags/actions/workflows/workflow.yaml)
+
 ## Update Application Version Tags in Configuration Files
 
 Get your new versions of your application (docker images) deployed. The aim of this action is aiding automated deployment processes
