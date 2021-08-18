@@ -15,7 +15,7 @@ jobs:
           uses: dzelge/helm-update-version-tags@main
           with:
             app: my-app
-            deployment-phase: dev
+            phase: dev
             delimiter: ' '
             tag: v1.0.1
             working-directory: ./test
