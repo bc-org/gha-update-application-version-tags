@@ -5,7 +5,7 @@ inputs:
     description: 'Application to change all version tags for e.g. application docker imnages in a configuration file (e.g. Helm values files)'
     required: true
   deployment-phase:
-    description: 'Target stage (dev/stage/prod/ignore). Can be others'
+    description: 'Target stage (dev/stage/prod/ignore). In mode single the user is free to use whatever name suits except for ignore.'
     required: true
     default: 'dev'
   prefix:
@@ -20,6 +20,7 @@ inputs:
     required: false
     default: './'
   mode:
+    # Currently, 'cascade' can only handle phases dev/stage/prod excplicitely. Whereas the user is free to use whatever suits as phase name in mode 'single'.
     description: 'Whether to cascade or not. When cascading, prod will be deployed to all three stages, stage to stage and dev, and dev to dev only.'
     required: false
     default: "cascade"
@@ -33,6 +34,9 @@ runs:
     - shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
+        if [[ "${{ inputs.deployment-phase }}" == "ignore" ]]; then
+          exit 0
+        fi
         if [[ "${{ inputs.mode }}" == "cascade" ]]; then
           if [[ "${{ inputs.deployment-phase }}" =~ ^(dev|stage|prod)$ ]]; then
             sed -i 's/${{ inputs.app }}-tag${{ inputs.delimiter }}.*$/${{ inputs.app }}-tag ${{ inputs.tag }}/g' ${{ inputs.prefix }}dev.yaml
