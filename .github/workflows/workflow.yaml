@@ -24,8 +24,8 @@ jobs:
         run: |
           echo "Checking result with expected using diff."
           diff values-dev.yaml values-test.yaml
-          diff values-stage.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Stage good!"
-          diff values-prod.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Prod good!"
+          diff values-stage.yaml values-test.yaml && echo "Prod should be different"; exit 1 || echo "Stage good!"
+          diff values-prod.yaml values-test.yaml && echo "Prod should be different"; exit 1 || echo "Prod good!"
   test-stage-cascade:
     runs-on: ubuntu-latest
     steps:
@@ -44,7 +44,7 @@ jobs:
           echo "Checking result with expected using diff."
           diff values-dev.yaml values-test.yaml
           diff values-stage.yaml values-test.yaml
-          diff values-prod.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Prod good!"
+          diff values-prod.yaml values-test.yaml && echo "Prod should be different"; exit 1 || echo "Prod good!"
   test-prod-cascade:
     runs-on: ubuntu-latest
     steps:
@@ -82,8 +82,8 @@ jobs:
         run: |
           echo "Checking result with expected using diff."
           diff values-dev.yaml values-test.yaml
-          diff values-stage.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Stage good!"
-          diff values-prod.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Prod good!"
+          diff values-stage.yaml values-test.yaml && echo "Prod should be different"; exit 1 || echo "Stage good!"
+          diff values-prod.yaml values-test.yaml && echo "Prod should be different"; exit 1 || echo "Prod good!"
   test-stage-single:
     runs-on: ubuntu-latest
     steps:
@@ -102,8 +102,8 @@ jobs:
         run: |
           echo "Checking result with expected using diff."
           diff values-stage.yaml values-test.yaml
-          diff values-dev.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Dev good!"
-          diff values-prod.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Prod good!"
+          diff values-dev.yaml values-test.yaml && echo "Prod should be different"; exit 1 || echo "Dev good!"
+          diff values-prod.yaml values-test.yaml && echo "Prod should be different"; exit 1 || echo "Prod good!"
   test-prod-single:
     runs-on: ubuntu-latest
     steps:
@@ -122,6 +122,6 @@ jobs:
         run: |
           echo "Checking result with expected using diff."
           diff values-prod.yaml values-test.yaml
-          diff values-stage.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Stage good!"
-          diff values-dev.yaml values-test.yaml && echo "Prod should be different"; ecit 1 || echo "Dev good!"
+          diff values-stage.yaml values-test.yaml && echo "Prod should be different"; exit 1 || echo "Stage good!"
+          diff values-dev.yaml values-test.yaml && echo "Prod should be different"; exit 1 || echo "Dev good!"
 
