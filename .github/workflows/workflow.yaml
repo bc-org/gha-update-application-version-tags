@@ -19,6 +19,9 @@ jobs:
             delimiter: ' '
             tag: v1.0.1
             working-directory: ./test
+        - name: check-output
+          working-directory: ./test
+          run: echo values-dev.yaml
 #    test-stage:
 #      runs-on: ubuntu-latest
 #      steps:
