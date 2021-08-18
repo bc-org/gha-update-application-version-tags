@@ -4,8 +4,8 @@ inputs:
   app:
     description: 'Application to change all version tags for e.g. application docker imnages in a configuration file (e.g. Helm values files)'
     required: true
-  deployment-phase:
-    description: 'Target stage (dev/stage/prod/ignore). In mode single the user is free to use whatever name suits except for ignore.'
+  phase:
+    description: 'Deployment phase (dev/stage/prod/ignore). In mode single the user is free to use whatever name suits except for ignore.'
     required: true
     default: 'dev'
   prefix:
