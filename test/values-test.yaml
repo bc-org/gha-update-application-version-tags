@@ -1,6 +1,8 @@
 default:
-  &my-app-tag v1.0.1
+  - &my-app-tag v1.0.1
+  - &my-app-hash sha256:2c3b32c3972496aa3688f8f2a2594a54ef84e4aefe82c3552431cb8af5fbe16f
 
 app:
   image:
     tag: *my-app-tag
+    hash: *my-app-hash
