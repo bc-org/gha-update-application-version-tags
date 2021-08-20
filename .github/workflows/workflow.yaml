@@ -7,7 +7,7 @@ on:
       - published
 
 jobs:
-  test-dev-cascade:
+  test-non-existent-hash:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,6 +18,26 @@ jobs:
           phase: dev
           delimiter: ' '
           tag: v1.0.1
+          working-directory: ./test
+      - name: check-output
+        working-directory: ./test
+        run: |
+          echo "Checking result with expected using diff."
+          cat values-dev.yaml
+          grep "my-app-hash null" values-dev.yaml && echo "Dev good" || echo "Dev hash faulty!"
+  test-dev-cascade:
+    runs-on: ubuntu-latest
+    needs: test-non-existent-hash
+    steps:
+      - uses: actions/checkout@v2
+      - name: test-dev
+        uses: ./
+        with:
+          app: my-app
+          phase: dev
+          delimiter: ' '
+          tag: v1.0.1
+          hash: "sha256:2c3b32c3972496aa3688f8f2a2594a54ef84e4aefe82c3552431cb8af5fbe16f"
           working-directory: ./test
       - name: check-output
         working-directory: ./test
@@ -28,6 +48,7 @@ jobs:
           grep v1.0.0 values-prod.yaml && echo "Prod good" || echo "Prod should not have changed!"
   test-stage-cascade:
     runs-on: ubuntu-latest
+    needs: test-dev-cascade
     steps:
       - uses: actions/checkout@v2
       - name: test-dev
@@ -37,6 +58,7 @@ jobs:
           phase: stage
           delimiter: ' '
           tag: v1.0.1
+          hash: "sha256:2c3b32c3972496aa3688f8f2a2594a54ef84e4aefe82c3552431cb8af5fbe16f"
           working-directory: ./test
       - name: check-output
         working-directory: ./test
@@ -47,6 +69,7 @@ jobs:
           grep v1.0.0 values-prod.yaml && echo "Prod good" || echo "Prod should not have changed!"
   test-prod-cascade:
     runs-on: ubuntu-latest
+    needs: test-stage-cascade
     steps:
       - uses: actions/checkout@v2
       - name: test-dev
@@ -56,6 +79,7 @@ jobs:
           phase: prod
           delimiter: ' '
           tag: v1.0.1
+          hash: "sha256:2c3b32c3972496aa3688f8f2a2594a54ef84e4aefe82c3552431cb8af5fbe16f"
           working-directory: ./test
       - name: check-output
         working-directory: ./test
@@ -66,6 +90,7 @@ jobs:
           diff values-prod.yaml values-test.yaml
   test-dev-single:
     runs-on: ubuntu-latest
+    needs: test-prod-cascade
     steps:
       - uses: actions/checkout@v2
       - name: test-dev
@@ -76,6 +101,7 @@ jobs:
           phase: dev
           delimiter: ' '
           tag: v1.0.1
+          hash: "sha256:2c3b32c3972496aa3688f8f2a2594a54ef84e4aefe82c3552431cb8af5fbe16f"
           working-directory: ./test
       - name: check-output
         working-directory: ./test
@@ -86,6 +112,7 @@ jobs:
           grep v1.0.0 values-dev.yaml && echo "Dev good" || echo "Dev should not have changed!"
   test-stage-single:
     runs-on: ubuntu-latest
+    needs: test-dev-single
     steps:
       - uses: actions/checkout@v2
       - name: test-dev
@@ -96,6 +123,7 @@ jobs:
           phase: stage
           delimiter: ' '
           tag: v1.0.1
+          hash: "sha256:2c3b32c3972496aa3688f8f2a2594a54ef84e4aefe82c3552431cb8af5fbe16f"
           working-directory: ./test
       - name: check-output
         working-directory: ./test
@@ -106,6 +134,7 @@ jobs:
           grep v1.0.0 values-dev.yaml && echo "Dev good" || echo "Dev should not have changed!"
   test-prod-single:
     runs-on: ubuntu-latest
+    needs: test-stage-single
     steps:
       - uses: actions/checkout@v2
       - name: test-dev
@@ -116,6 +145,7 @@ jobs:
           phase: prod
           delimiter: ' '
           tag: v1.0.1
+          hash: "sha256:2c3b32c3972496aa3688f8f2a2594a54ef84e4aefe82c3552431cb8af5fbe16f"
           working-directory: ./test
       - name: check-output
         working-directory: ./test

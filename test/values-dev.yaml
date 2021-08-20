@@ -1,6 +1,8 @@
 default:
-  &my-app-tag v1.0.0
+  - &my-app-tag v1.0.0
+  - &my-app-hash null
 
 app:
   image:
     tag: *my-app-tag
+    hash: *my-app-hash
