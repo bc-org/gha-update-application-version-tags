@@ -16,7 +16,7 @@ inputs:
     description: 'Version tag to use'
     required: true
   hash:
-    description: 'Version digest hash. Supersedes tag.'
+    description: 'Version digest hash. The digest will be edited in the configuration file(s) if present.'
     required: false
     default: 'null'
   working-directory:
