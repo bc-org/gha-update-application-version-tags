@@ -2,7 +2,7 @@ name: 'Set Helm Tags'
 description: 'Setting application version tags (e.g. for docker image versions) in (e.g. Helm) configuration files for different deployment phases (e.g. dev/stage/prod).'
 inputs:
   app:
-    description: 'Application to change all version tags for e.g. application docker imnages in a configuration file (e.g. Helm values files)'
+    description: 'Application to change all version tags for e.g. application docker images in a configuration file (e.g. Helm values files)'
     required: true
   phase:
     description: 'Deployment phase (dev/stage/prod/ignore). In mode single the user is free to use whatever name suits except for ignore.'
